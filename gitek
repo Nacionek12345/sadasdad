@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test</title>
+  <style>
+     body {
+      background: rgb(34, 193, 195);
+      background: linear-gradient(0deg, rgba(34, 193, 195, 1) 0%, rgba(253, 187, 45, 1) 100%);
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .pytanie {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+      font-weight: bold;
+      background: #fff;
+    }
+
+    .pytanie p {
+      margin: 0;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    #wynik {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div id="test-container"></div>
+
+  <button onclick="sprawdzOdpowiedzi()">Sprawdź odpowiedzi</button>
+  <p id="wynik"></p>
+  <script>
+    // Definicja obiektu zawierającego pytania i odpowiedzi
+const test = [
+  {
+    pytanie: "Jakie są podstawowe składniki budowy wodorotlenków?",
+    odpowiedzi: [
+      "a) Atomy wodoru i tlenu",
+      "b) Atomy tlenu i metalu",
+      "c) Atomy wodoru i metalu",
+      "d) Atomy wodoru i węgla"
+    ],
+    poprawnaOdpowiedz: "c"
+  },
+  {
+    pytanie: "Jak można otrzymać wodorotlenki drogą chemiczną?",
+    odpowiedzi: [
+      "a) Reakcją metalu z tlenkiem",
+      "b) Reakcją metalu z kwasem",
+      "c) Reakcją metalu z solą",
+      "d) Reakcją metalu z wodą"
+    ],
+    poprawnaOdpowiedz: "d"
+  },
+  {
+    pytanie: "Jakie są niektóre właściwości wodorotlenków?",
+    odpowiedzi: [
+      "a) Kwasowość",
+      "b) Zasadowość",
+      "c) Amfoteryczność",
+      "d) Inertność"
+    ],
+    poprawnaOdpowiedz: "b"
+  },
+  {
+    pytanie: "Jaki jest podział wodorotlenków ze względu na ich właściwości kwasowo-zasadowe?",
+    odpowiedzi: [
+      "a) Wodorotlenki kwasowe i zasadowe",
+      "b) Wodorotlenki amfoteryczne i neutralne",
+      "c) Wodorotlenki kwasowe i amfoteryczne",
+      "d) Wodorotlenki kwasowe i neutralne"
+    ],
+    poprawnaOdpowiedz: "c"
+  },
+  {
+    pytanie: "Co powstaje w wyniku reakcji wodorotlenku z kwasem?",
+    odpowiedzi: [
+      "a) Kwas",
+      "b) Zasada",
+      "c) Sole",
+      "d) Woda"
+    ],
+    poprawnaOdpowiedz: "d"
+  },
+  {
+    pytanie: "Jakie są podstawowe składniki budowy kwasów nieorganicznych?",
+    odpowiedzi: [
+      "a) Atomy wodoru i tlenu",
+      "b) Atomy wodoru i metalu",
+      "c) Atomy tlenu i metalu",
+      "d) Atomy wodoru i nieorganicznych anionów"
+    ],
+    poprawnaOdpowiedz: "d"
+  },
+  {
+    pytanie: "Jakie są główne rodzaje kwasów nieorganicznych pod względem stopnia dysocjacji?",
+    odpowiedzi: [
+      "a) Kwas mocny i kwas słaby",
+      "b) Kwas jednorodny i heterogeniczny",
+      "c) Kwas tlenowy i kwas beztlenowy",
+      "d) Kwas nasycony i kwas nienasycony"
+    ],
+    poprawnaOdpowiedz: "a"
+  },
+  {
+    pytanie: "Jak można otrzymać kwas nieorganiczny?",
+    odpowiedzi: [
+      "a) Reakcją metalu z tlenkiem",
+      "b) Reakcją metalu z kwasem",
+      "c) Reakcją tlenku z wodą",
+      "d) Reakcją kwasu z zasadą"
+    ],
+    poprawnaOdpowiedz: "b"
+  },
+  {
+    pytanie: "Jakie są metody otrzymywania soli?",
+    odpowiedzi: [
+      "a) Reakcja kwasu z zasadą",
+      "b) Reakcja metalu z tlenkiem",
+      "c) Reakcja metalu z kwasem",
+      "d) Reakcja tlenku z wodą"
+    ],
+    poprawnaOdpowiedz: "a"
+  },
+  {
+    pytanie: "Co powstaje w wyniku reakcji kwasu z zasadą?",
+    odpowiedzi: [
+      "a) Sole",
+      "b) Kwasy",
+      "c) Tlenki",
+      "d) Wodorotlenki"
+    ],
+    poprawnaOdpowiedz: "a"
+  }
+];
+
+// Funkcja generująca test
+function generujTest() {
+  const testContainer = document.getElementById("test-container");
+  for (let i = 0; i < test.length; i++) {
+    const pytanieContainer = document.createElement("div");
+    pytanieContainer.className = "pytanie-container";
+
+    const pytanieElement = document.createElement("p");
+    pytanieElement.className = "pytanie";
+    pytanieElement.innerHTML = (i + 1) + ". " + test[i].pytanie;
+    pytanieContainer.appendChild(pytanieElement);
+
+    const odpowiedziContainer = document.createElement("div");
+    odpowiedziContainer.className = "odpowiedzi-container";
+    for (let j = 0; j < test[i].odpowiedzi.length; j++) {
+      const odpowiedzElement = document.createElement("label");
+      odpowiedzElement.className = "odpowiedz";
+
+      const inputElement = document.createElement("input");
+      inputElement.type = "radio";
+      inputElement.name = "odpowiedz-" + i;
+      inputElement.value = String.fromCharCode(97 + j);
+      odpowiedzElement.appendChild(inputElement);
+
+      const spanElement = document.createElement("span");
+      spanElement.innerHTML = test[i].odpowiedzi[j].substring(3); // Pomijamy literę i spację w odpowiedzi
+      odpowiedzElement.appendChild(spanElement);
+
+      odpowiedziContainer.appendChild(odpowiedzElement);
+    }
+
+    pytanieContainer.appendChild(odpowiedziContainer);
+    testContainer.appendChild(pytanieContainer);
+
+    const lineBreak = document.createElement("br");
+    testContainer.appendChild(lineBreak);
+  }
+}
+function sprawdzOdpowiedzi() {
+      const iloscPytan = test.length;
+      let iloscPoprawnych = 0;
+
+      for (let i = 0; i < iloscPytan; i++) {
+        const radioButtons = document.getElementsByName("odpowiedz-" + i);
+        const iloscOdpowiedzi = radioButtons.length;
+
+        for (let j = 0; j < iloscOdpowiedzi; j++) {
+          if (radioButtons[j].checked && radioButtons[j].value === test[i].poprawnaOdpowiedz) {
+            iloscPoprawnych++;
+            break;
+          }
+        }
+      }
+
+      const procentPoprawnych = (iloscPoprawnych / iloscPytan) * 100;
+      const wynikElement = document.getElementById("wynik");
+      wynikElement.innerHTML = "Poprawne odpowiedzi: " + iloscPoprawnych + " / " + iloscPytan + " (" + procentPoprawnych.toFixed(2) + "%)";
+    }
+generujTest();
+
+  </script>
+  Maciej Wąsiewicz , Oskar Szałapaj , Igor Ptak
